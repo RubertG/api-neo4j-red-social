@@ -3,7 +3,7 @@ from src.schemas.PostSchema import SchemaPost
 from src.services.PostService import (
     obtener,
     crear,
-    obtenerPorID,
+    obtenerPost,
     eliminarPorID,
     actualizar,
     obtenerPorUsuario
@@ -20,8 +20,8 @@ def obtenerTodosPorUsuario(id: str):
     return obtenerPorUsuario(id)
 
 @Route.get("/{id}")
-def obtenerPost(id: str):
-    return obtenerPorID(id)
+def obtenerPorId(id: str):
+    return obtenerPost(id)
     
 @Route.post("/")
 def crearPost(post: SchemaPost):

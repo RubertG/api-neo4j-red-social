@@ -41,22 +41,6 @@ def obtenerUsuario(id: str):
         if (data == []):
             raise HTTPException(status_code=404, detail=f"El usuario con id '{id}' no existe")
         return data[0]
-    except Exception as e:
-        print(e)
-        return {"message": str(e)}
-    finally:
-        driver.close()
-
-def obtenerUsuario(id: str):
-    try:
-        driver = conexionDB()
-        session = driver.session()
-        query = "MATCH (u:Usuario {id: $id}) RETURN u"
-        results = session.run(query, id=id)
-        data = results.value()
-        if (data == []):
-            raise HTTPException(status_code=404, detail=f"El usuario con id '{id}' no existe")
-        return data
     finally:
         driver.close()
 
@@ -68,9 +52,6 @@ def eliminarPorID(id: str):
         obtenerUsuario(id)  # Verificar existencia antes de eliminar
         session.run(query, id=id)
         return { "message": "Usuario eliminado" }
-    except Exception as e:
-        print(e)
-        return {"message": str(e)}
     finally:
         driver.close()
 

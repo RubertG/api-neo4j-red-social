@@ -52,22 +52,6 @@ def obtenerPorID(id: str):
         if (data == []):
             raise HTTPException(status_code=404, detail=f"El comentario con id '{id}' no existe")
         return data[0]
-    except Exception as e:
-        print(e)
-        return {"message": str(e)}
-    finally:
-        driver.close()
-
-def obtenerComment(id: str):
-    try:
-        driver = conexionDB()
-        session = driver.session()
-        query = "MATCH (c:Comentario {id: $id}) RETURN c"
-        results = session.run(query, id=id)
-        data = results.value()
-        if (data == []):
-            raise HTTPException(status_code=404, detail=f"El comentario con id '{id}' no existe")
-        return data
     finally:
         driver.close()
 
@@ -76,12 +60,9 @@ def eliminarPorID(id: str):
         driver = conexionDB()
         session = driver.session()
         query = "MATCH (c:Comentario {id: $id}) DETACH DELETE c"
-        obtenerComment(id)  # Verificar existencia antes de eliminar
+        obtenerPorID(id)  # Verificar existencia antes de eliminar
         session.run(query, id=id)
         return { "message": "Comentario eliminado" }
-    except Exception as e:
-        print(e)
-        return {"message": str(e)}
     finally:
         driver.close()
 
@@ -96,9 +77,6 @@ def obtenerPorPost(post_id: str):
         obtenerPost(post_id)  # Verificar existencia del Post antes de buscar comentarios
         results = session.run(query, post_id=post_id)
         return results.value()
-    except Exception as e:
-        print(e)
-        return {"message": str(e)}
     finally:
         driver.close()
         
@@ -107,25 +85,9 @@ def actualizar(id: str, comentario: SchemaComentario):
         driver = conexionDB()
         session = driver.session()
         query = "MATCH (c:Comentario {id: $id}) SET c.contenido = $contenido"
-        obtenerComment(id)  # Verificar existencia antes de actualizar
+        obtenerPorID(id)  # Verificar existencia antes de actualizar
         results = session.run(query, id=id, contenido=comentario.contenido)
         return results.value()
-    except Exception as e:
-        print(e)
-        return {"message": str(e)}
-    finally:
-        driver.close()
-
-def obtenerPost(id: str):
-    try:
-        driver = conexionDB()
-        session = driver.session()
-        query = "MATCH (p:Post {id: $id}) RETURN p"
-        results = session.run(query, id=id)
-        data = results.value()
-        if (data == []):
-            raise HTTPException(status_code=404, detail=f"El post con id '{id}' no existe")
-        return data[0]
     except Exception as e:
         print(e)
         return {"message": str(e)}

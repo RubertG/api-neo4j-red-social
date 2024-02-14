@@ -37,22 +37,6 @@ def crear(post: SchemaPost):
     finally:
         driver.close()
 
-def obtenerPorID(id: str):
-    try:
-        driver = conexionDB()
-        session = driver.session()
-        query = "MATCH (p:Post {id: $id}) RETURN p"
-        results = session.run(query, id=id)
-        data = results.value()
-        if (data == []):
-            raise HTTPException(status_code=404, detail=f"El post con id '{id}' no existe")
-        return data[0]
-    except Exception as e:
-        print(e)
-        return {"message": str(e)}
-    finally:
-        driver.close()
-
 def obtenerPost(id: str):
     try:
         driver = conexionDB()
@@ -91,9 +75,6 @@ def obtenerPorUsuario(usuario_id: str):
         obtenerUsuario(usuario_id) 
         results = session.run(query, usuario_id=usuario_id)
         return results.value()
-    except Exception as e:
-        print(e)
-        return {"message": str(e)}
     finally:
         driver.close()
 
