@@ -51,7 +51,7 @@ def obtenerPorID(id: str):
         data = results.value()
         if (data == []):
             raise HTTPException(status_code=404, detail=f"El comentario con id '{id}' no existe")
-        return data
+        return data[0]
     except Exception as e:
         print(e)
         return {"message": str(e)}
